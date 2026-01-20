@@ -88,7 +88,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(ProjectDir)lib\hitboxplugin.set" "$(OutDir)hitboxplugin.set"</Command>
+      <Command>copy "$(ProjectDir)lib\hitboxplugin.set" "$(OutDir)hitboxplugin.set"
+copy "$(ProjectDir)lib\hitboxplugin.cfg" "$(OutDir)hitboxplugin.cfg"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -99,7 +100,8 @@
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy "$(ProjectDir)lib\hitboxplugin.set" "$(OutDir)hitboxplugin.set"</Command>
+      <Command>copy "$(ProjectDir)lib\hitboxplugin.set" "$(OutDir)hitboxplugin.set"
+copy "$(ProjectDir)lib\hitboxplugin.cfg" "$(OutDir)hitboxplugin.cfg"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -110,7 +112,8 @@
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy "$(ProjectDir)lib\hitboxplugin.set" "$(OutDir)hitboxplugin.set"</Command>
+      <Command>copy "$(ProjectDir)lib\hitboxplugin.set" "$(OutDir)hitboxplugin.set"
+copy "$(ProjectDir)lib\hitboxplugin.cfg" "$(OutDir)hitboxplugin.cfg"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -129,7 +132,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(ProjectDir)lib\hitboxplugin.set" "$(OutDir)hitboxplugin.set"</Command>
+      <Command>copy "$(ProjectDir)lib\hitboxplugin.set" "$(OutDir)hitboxplugin.set"
+copy "$(ProjectDir)lib\hitboxplugin.cfg" "$(OutDir)hitboxplugin.cfg"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

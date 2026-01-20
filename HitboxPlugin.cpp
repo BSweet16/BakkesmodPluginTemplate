@@ -17,7 +17,7 @@
 #include "RenderingTools/Extra/RenderingMath.h"
 #include <sstream>
 
-BAKKESMOD_PLUGIN(HitboxPlugin, "Hitbox plugin", "2.1", PLUGINTYPE_FREEPLAY | PLUGINTYPE_CUSTOM_TRAINING)
+BAKKESMOD_PLUGIN(HitboxPlugin, "Hitbox Plugin", "2.1", PLUGINTYPE_FREEPLAY | PLUGINTYPE_CUSTOM_TRAINING)
 
 HitboxPlugin::HitboxPlugin()
 {
