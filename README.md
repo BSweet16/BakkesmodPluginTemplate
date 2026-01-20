@@ -7,9 +7,9 @@ Draws a hitbox around your car during training.   Car type is auto-detected, and
 
 ## Installation
 
-1. Download the repo as a zip and extract it.
-2. Copy `HitboxPlugin.dll` to `<steam_directory>/steamapps/common/rocketleague/Binaries/Win32/bakkesmod/plugins`
-3. Copy `hitboxplugin.set` to `<steam_directory>/steamapps/common/rocketleague/Binaries/Win32/bakkesmod/plugins/settings`
+1. Build the project in Visual Studio (Debug or Release configuration).
+2. Copy `x64\[Release | Debug]\HitboxPlugin.dll` to `<steam_directory>/steamapps/common/rocketleague/Binaries/Win64/bakkesmod/plugins`
+3. Copy `x64\[Release | Debug]\hitboxplugin.set` to `<steam_directory>/steamapps/common/rocketleague/Binaries/Win64/bakkesmod/plugins/settings`
 4. In the game console run `plugin load hitboxplugin`
 
 ### (Alternate) Video showing original steps (Except the restart)
