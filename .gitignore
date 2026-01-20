@@ -249,3 +249,4 @@ _Pvt_Extensions
 *.sln.iml
 
 
+.vscode/settings.json
