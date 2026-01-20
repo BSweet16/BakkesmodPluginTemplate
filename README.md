@@ -1,6 +1,6 @@
 # BakkesMod Hitbox Plugin
 ![Preview Screenshot](PreviewImage.png)
-Draws a hitbox around your car during training.   Car type is auto-detected, and can also be set manually. 
+Draws a hitbox around your car during training. Car type is auto-detected, and can also be set manually. 
 
 ## Installation
 1. Build the project in Visual Studio (Debug or Release configuration).

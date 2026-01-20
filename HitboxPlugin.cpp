@@ -3,6 +3,7 @@
 #include "HitboxPlugin.h"
 #include "Hitbox.h"
 #include "CarManager.h"
+#include "bakkesmod/imgui/imgui/imgui.h"
 #include "bakkesmod/wrappers/GameEvent/ServerWrapper.h"
 #include "bakkesmod/wrappers/GameObject/BallWrapper.h"
 #include "bakkesmod/wrappers/GameObject/CarWrapper.h"
@@ -40,6 +41,8 @@ void HitboxPlugin::onLoad()
 	cvarManager->registerCvar("cl_soccar_sethitboxtype", "0", "Set Hitbox Car Type", true, true, 0, true, 32767, false).bindTo(hitboxType);
 	cvarManager->getCvar("cl_soccar_sethitboxtype").addOnValueChanged(std::bind(&HitboxPlugin::OnHitboxTypeChanged, this, std::placeholders::_1, std::placeholders::_2));
 
+	lineThickness = std::make_shared<float>(1.0f);
+	cvarManager->registerCvar("cl_soccar_hitboxthickness", "1.0", "Line thickness for hitbox visualization", true, true, 0.5f, true, 5.0f).bindTo(lineThickness);
 
 	gameWrapper->HookEvent("Function TAGame.Mutator_Freeplay_TA.Init", bind(&HitboxPlugin::OnFreeplayLoad, this, std::placeholders::_1));
 	gameWrapper->HookEvent("Function TAGame.GameEvent_Soccar_TA.Destroyed", bind(&HitboxPlugin::OnFreeplayDestroy, this, std::placeholders::_1));
@@ -178,18 +181,18 @@ void HitboxPlugin::Render(CanvasWrapper canvas)
 				hitbox3D[i] = Rotate(hitbox[i], dRoll, -dYaw, dPitch) + v;
 				//hitbox2D[i] = canvas.Project(Rotate(hitbox[i], dRoll, -dYaw, dPitch) + v);
 			}
-			RT::Line(hitbox3D[0], hitbox3D[1], 1.f).DrawWithinFrustum(canvas, frust);
-			RT::Line(hitbox3D[1], hitbox3D[2], 1.f).DrawWithinFrustum(canvas, frust);
-			RT::Line(hitbox3D[2], hitbox3D[3], 1.f).DrawWithinFrustum(canvas, frust);
-			RT::Line(hitbox3D[3], hitbox3D[0], 1.f).DrawWithinFrustum(canvas, frust);
-			RT::Line(hitbox3D[4], hitbox3D[5], 1.f).DrawWithinFrustum(canvas, frust);
-			RT::Line(hitbox3D[5], hitbox3D[6], 1.f).DrawWithinFrustum(canvas, frust);
-			RT::Line(hitbox3D[6], hitbox3D[7], 1.f).DrawWithinFrustum(canvas, frust);
-			RT::Line(hitbox3D[7], hitbox3D[4], 1.f).DrawWithinFrustum(canvas, frust);
-			RT::Line(hitbox3D[0], hitbox3D[4], 1.f).DrawWithinFrustum(canvas, frust);
-			RT::Line(hitbox3D[1], hitbox3D[5], 1.f).DrawWithinFrustum(canvas, frust);
-			RT::Line(hitbox3D[2], hitbox3D[6], 1.f).DrawWithinFrustum(canvas, frust);
-			RT::Line(hitbox3D[3], hitbox3D[7], 1.f).DrawWithinFrustum(canvas, frust);
+			RT::Line(hitbox3D[0], hitbox3D[1], *lineThickness).DrawWithinFrustum(canvas, frust);
+			RT::Line(hitbox3D[1], hitbox3D[2], *lineThickness).DrawWithinFrustum(canvas, frust);
+			RT::Line(hitbox3D[2], hitbox3D[3], *lineThickness).DrawWithinFrustum(canvas, frust);
+			RT::Line(hitbox3D[3], hitbox3D[0], *lineThickness).DrawWithinFrustum(canvas, frust);
+			RT::Line(hitbox3D[4], hitbox3D[5], *lineThickness).DrawWithinFrustum(canvas, frust);
+			RT::Line(hitbox3D[5], hitbox3D[6], *lineThickness).DrawWithinFrustum(canvas, frust);
+			RT::Line(hitbox3D[6], hitbox3D[7], *lineThickness).DrawWithinFrustum(canvas, frust);
+			RT::Line(hitbox3D[7], hitbox3D[4], *lineThickness).DrawWithinFrustum(canvas, frust);
+			RT::Line(hitbox3D[0], hitbox3D[4], *lineThickness).DrawWithinFrustum(canvas, frust);
+			RT::Line(hitbox3D[1], hitbox3D[5], *lineThickness).DrawWithinFrustum(canvas, frust);
+			RT::Line(hitbox3D[2], hitbox3D[6], *lineThickness).DrawWithinFrustum(canvas, frust);
+			RT::Line(hitbox3D[3], hitbox3D[7], *lineThickness).DrawWithinFrustum(canvas, frust);
 
 			float diff = (camera.GetLocation() - v).magnitude();
 			Quat car_rot = RotatorToQuat(r);
@@ -223,5 +226,63 @@ void HitboxPlugin::Render(CanvasWrapper canvas)
 
 void HitboxPlugin::onUnload()
 {
+}
+
+void HitboxPlugin::SetImGuiContext(uintptr_t ctx)
+{
+	ImGui::SetCurrentContext(reinterpret_cast<ImGuiContext*>(ctx));
+}
+
+std::string HitboxPlugin::GetPluginName()
+{
+	return "Hitbox Plugin";
+}
+
+void HitboxPlugin::RenderSettings()
+{
+	// Enable Mode
+	const char* enableModes[] = { "Off", "Practice", "Replays", "Practice and Replays" };
+	int currentMode = *hitboxOn;
+	if (ImGui::Combo("Show Hitbox", &currentMode, enableModes, IM_ARRAYSIZE(enableModes)))
+	{
+		cvarManager->getCvar("cl_soccar_showhitbox").setValue(currentMode);
+	}
+
+	// Hitbox Type
+	const char* hitboxTypes[] = { "Currently equipped car", "Octane", "Dominus", "Batmobile/Plank", "Breakout", "Hybrid/Endo", "Merc" };
+	const int hitboxTypeValues[] = { 0, 23, 403, 803, 22, 1624, 30 };
+	int currentTypeIndex = 0;
+	for (int i = 0; i < IM_ARRAYSIZE(hitboxTypeValues); i++)
+	{
+		if (hitboxTypeValues[i] == *hitboxType)
+		{
+			currentTypeIndex = i;
+			break;
+		}
+	}
+	if (ImGui::Combo("Hitbox Type", &currentTypeIndex, hitboxTypes, IM_ARRAYSIZE(hitboxTypes)))
+	{
+		cvarManager->getCvar("cl_soccar_sethitboxtype").setValue(hitboxTypeValues[currentTypeIndex]);
+	}
+	ImGui::TextDisabled("Wheels will always be based on the currently equipped car");
+
+	// Color Picker
+	LinearColor color = *hitboxColor;
+	float colorArr[4] = { color.R / 255.f, color.G / 255.f, color.B / 255.f, color.A / 255.f };
+	if (ImGui::ColorEdit4("Line Color", colorArr, ImGuiColorEditFlags_NoInputs))
+	{
+		char hexColor[10];
+		snprintf(hexColor, sizeof(hexColor), "#%02X%02X%02X%02X",
+			(int)(colorArr[0] * 255), (int)(colorArr[1] * 255),
+			(int)(colorArr[2] * 255), (int)(colorArr[3] * 255));
+		cvarManager->getCvar("cl_soccar_hitboxcolor").setValue(hexColor);
+	}
+
+	// Line Thickness
+	float thickness = *lineThickness;
+	if (ImGui::SliderFloat("Line Thickness", &thickness, 0.5f, 5.0f, "%.1f"))
+	{
+		cvarManager->getCvar("cl_soccar_hitboxthickness").setValue(thickness);
+	}
 }
 

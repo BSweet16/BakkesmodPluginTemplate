@@ -2,6 +2,7 @@
 #include <memory>
 #pragma comment( lib, "pluginsdk.lib" )
 #include "bakkesmod/plugin/bakkesmodplugin.h"
+#include "bakkesmod/plugin/PluginSettingsWindow.h"
 #include "Hitbox.h"
 
 /*
@@ -24,12 +25,13 @@ struct PredictedPoint
 	Vector angVel;
 };
 
-class HitboxPlugin : public BakkesMod::Plugin::BakkesModPlugin
+class HitboxPlugin : public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow
 {
 private:
 	std::shared_ptr<int> hitboxOn;
 	std::shared_ptr<int> hitboxType;
 	std::shared_ptr<LinearColor> hitboxColor;
+	std::shared_ptr<float> lineThickness;
 	LineColor colors[2] = { {0, 255, 0, 240}, {75, 0, 130, 240} };
 	std::vector<Hitbox> hitboxes;
 public:
@@ -37,12 +39,17 @@ public:
 	~HitboxPlugin();
 	virtual void onLoad();
 	virtual void onUnload();
-	
+
 	void OnFreeplayLoad(std::string eventName);
 	void OnFreeplayDestroy(std::string eventName);
 	void OnHitboxOnValueChanged(std::string oldValue, CVarWrapper cvar);
 	void OnHitboxTypeChanged(std::string oldValue, CVarWrapper cvar);
 	void Render(CanvasWrapper canvas);
+
+	// PluginSettingsWindow interface
+	void RenderSettings() override;
+	std::string GetPluginName() override;
+	void SetImGuiContext(uintptr_t ctx) override;
 };
 
 // utility function
